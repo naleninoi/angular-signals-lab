@@ -1,21 +1,18 @@
-
 <div class="counter">
-    <p class="counter-value">
-        Текущее значение: {{ count }}
-    </p>
+    <p class="counter-value">Текущее значение: {{ count() }}</p>
 
     <div class="counter-actions">
         <button
             type="button"
             (click)="decrement()"
-            [disabled]="count <= 0">
+            [disabled]="count() <= 0">
             −
         </button>
 
         <button
             type="button"
             (click)="increment()"
-            [disabled]="count >= 10">
+            [disabled]="count() >= 10">
             +
         </button>
 
@@ -26,7 +23,5 @@
         </button>
     </div>
 
-    <p class="counter-hint">
-        Допустимый диапазон: 0–10
-    </p>
+    <p class="counter-hint">Допустимый диапазон: 0–10</p>
 </div>

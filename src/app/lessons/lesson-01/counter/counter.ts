@@ -1,24 +1,28 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 
 @Component({
     selector: 'app-counter',
-    imports: [],
     templateUrl: './counter.html',
-    styleUrl: './counter.scss',
+    styleUrl: './counter.scss'
 })
 export class Counter {
-    // TODO: заменить обычное свойство на signal()
-    count = 5;
+    public readonly count = signal(5);
 
     increment(): void {
-        // TODO: увеличить значение, максимум 10
+        if (this.count() >= 10) {
+            return;
+        }
+        this.count.update(val => val + 1);
     }
 
     decrement(): void {
-        // TODO: уменьшить значение, минимум 0
+        if (this.count() <= 0) {
+            return;
+        }
+        this.count.update(val => val - 1);
     }
 
     reset(): void {
-        // TODO: сбросить значение до 0
+        this.count.set(0);
     }
 }

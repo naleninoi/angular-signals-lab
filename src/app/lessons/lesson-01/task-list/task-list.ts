@@ -1,5 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 interface Task {
@@ -10,48 +9,58 @@ interface Task {
 
 @Component({
     selector: 'app-task-list',
-    standalone: true,
-    imports: [CommonModule, FormsModule],
+    imports: [FormsModule],
     templateUrl: './task-list.html',
-    styleUrl: './task-list.scss',
-    changeDetection: ChangeDetectionStrategy.Eager
+    styleUrl: './task-list.scss'
 })
 export class TaskList {
-    tasks: Task[] = [
+    readonly tasks = signal<Task[]>([
         { id: 1, title: 'Learn Angular', completed: true },
         { id: 2, title: 'Learn Signals', completed: false },
-        { id: 3, title: 'Refactor legacy code', completed: false },
-    ];
+        { id: 3, title: 'Refactor legacy code', completed: false }
+    ]);
 
-    newTaskTitle = '';
+    readonly newTaskTitle = signal('');
 
     private nextId = 4;
 
     addTask(): void {
-        const title = this.newTaskTitle.trim();
+        const title = this.newTaskTitle().trim();
 
-        if (!title) {
+        const titleNotUnique = this.tasks().some(task => task.title.toLowerCase() === title.toLowerCase());
+
+        if (!title || titleNotUnique) {
             return;
         }
 
-        this.tasks.push({
+        const newTask: Task = {
             id: this.nextId++,
             title,
-            completed: false,
-        });
+            completed: false
+        };
 
-        this.newTaskTitle = '';
+        this.tasks.update(currentTasks => [...currentTasks, newTask]);
+
+        this.newTaskTitle.set('');
     }
 
     toggleTask(id: number): void {
-        const task = this.tasks.find((task) => task.id === id);
+        this.tasks.update(currentTasks =>
+            currentTasks.map(task => {
+                if (task.id !== id) {
+                    return task;
+                }
 
-        if (task) {
-            task.completed = !task.completed;
-        }
+                return { ...task, completed: !task.completed };
+            })
+        );
     }
 
     removeTask(id: number): void {
-        this.tasks = this.tasks.filter((task) => task.id !== id);
+        this.tasks.update(currentTasks => currentTasks.filter(task => task.id !== id));
+    }
+
+    onNewTaskTitleChange(newTitle: string): void {
+        this.newTaskTitle.set(newTitle);
     }
 }
