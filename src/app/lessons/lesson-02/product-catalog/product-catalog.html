@@ -1,0 +1,26 @@
+<section class="panel">
+    <h3>Legacy-каталог</h3>
+    <div class="filters">
+        <label>Поиск <input [(ngModel)]="search" (ngModelChange)="refresh()" /></label>
+        <label>Категория
+            <select [(ngModel)]="category" (ngModelChange)="refresh()">
+                <option>Все</option><option>Электроника</option><option>Аксессуары</option>
+            </select>
+        </label>
+        <label>Цена
+            <select [(ngModel)]="sortOrder" (ngModelChange)="refresh()">
+                <option value="asc">По возрастанию</option>
+                <option value="desc">По убыванию</option>
+            </select>
+        </label>
+    </div>
+    <ul>
+        @for (product of visibleProducts; track product.id) {
+            <li>{{ product.name }} — {{ product.category }} — {{ product.price }} ₽</li>
+        } @empty {
+            <li>Ничего не найдено</li>
+        }
+    </ul>
+    <p>Найдено: {{ resultCount }}</p>
+    <p>Сумма цен найденных товаров: {{ totalPrice }} ₽</p>
+</section>
