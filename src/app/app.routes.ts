@@ -1,9 +1,16 @@
 import { Routes } from '@angular/router';
+import { Home } from './home/home';
 
 export const routes: Routes = [
     {
         path: '',
-        loadComponent: () => import('./pages/home/home').then((m) => m.Home),
+        title: 'Angular Signals — Мини-курс',
+        component: Home,
+    },
+    {
+        path: 'lesson-01',
+        title: 'Урок 1 — Основы Signals',
+        loadComponent: () => import('./lessons/lesson-01/lesson-01').then((m) => m.Lesson01),
     },
     {
         path: '**',

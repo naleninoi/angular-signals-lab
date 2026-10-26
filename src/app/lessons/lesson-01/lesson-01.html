@@ -1,0 +1,34 @@
+
+<main class="lesson">
+    <a class="back-link" routerLink="/">
+        ← К списку уроков
+    </a>
+
+    <header class="lesson-header">
+        <h1>Урок 1. Основы Angular Signals</h1>
+        <p>Практическая часть: два упражнения</p>
+    </header>
+
+    <section class="exercise">
+        <h2>Практика №1. Счётчик</h2>
+
+        <p>
+            Реализуй состояние через signal().
+            Используй set() и update().
+            Диапазон значений: от 0 до 10.
+        </p>
+
+        <app-counter />
+    </section>
+
+    <section class="exercise">
+        <h2>Практика №2. Рефакторинг TaskList</h2>
+
+        <p>
+            Перед тобой работающий legacy-компонент.
+            Перепиши его на Signals, сохранив функциональность.
+        </p>
+
+        <app-task-list />
+    </section>
+</main>
