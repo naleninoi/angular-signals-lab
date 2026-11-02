@@ -15,7 +15,9 @@
         <input type="number" min="0" max="100" [value]="discountPercent()" (input)="changeDiscount($event)" />
     </label>
     <div class="summary">
-        <!-- TODO: вывести subtotal(), totalQuantity(), discountAmount(), total(). -->
-        <p>Добавь вычисляемые показатели в шаблон.</p>
+        <p>Общая стоимость без учета скидки: {{ subtotal() }} руб.</p>
+        <p>Суммарное количество единиц товаров: {{ totalQuantity() }} шт.</p>
+        <p>Сумма скидки: {{ discountAmount() }} руб.</p>
+        <p>Итоговая стоимость: {{ total() }} руб.</p>
     </div>
 </section>

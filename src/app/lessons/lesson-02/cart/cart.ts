@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, computed, signal } from '@angular/core';
 
 interface CartItem {
     id: number;
@@ -20,13 +20,32 @@ export class Cart {
     ]);
     readonly discountPercent = signal(10);
 
-    // TODO: subtotal, totalQuantity, discountAmount, total через computed().
+    readonly subtotal = computed(() => this.items().reduce((sum, item) => sum + item.price * item.quantity, 0));
+
+    readonly totalQuantity = computed(() => this.items().reduce((sum, item) => sum + item.quantity, 0));
+
+    readonly discountAmount = computed(() => (this.subtotal() * this.discountPercent()) / 100);
+
+    readonly total = computed(() => this.subtotal() - this.discountAmount());
 
     changeQuantity(id: number, delta: number): void {
-        // TODO: изменить количество иммутабельно; не допускать отрицательных значений.
+        this.items.update(currentItems =>
+            currentItems.map(item => {
+                if (item.id !== id) {
+                    return item;
+                }
+
+                const updatedQuantity = Math.max(0, item.quantity + delta);
+                return { ...item, quantity: updatedQuantity };
+            })
+        );
     }
 
-    changeDiscount(event: Event): void {
-        // TODO: считать значение input и обновить discountPercent (диапазон 0..100).
+    changeDiscount(event: InputEvent): void {
+        const input = event.target as HTMLInputElement;
+        const inputValue = Number.isFinite(input.valueAsNumber) ? input.valueAsNumber : 0;
+        const newDiscount = inputValue < 0 ? 0 : Math.min(inputValue, 100);
+
+        this.discountPercent.set(newDiscount);
     }
 }
