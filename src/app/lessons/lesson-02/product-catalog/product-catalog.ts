@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, computed, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 interface Product {
@@ -17,32 +17,47 @@ type SortOrder = 'asc' | 'desc';
     styleUrl: './product-catalog.scss'
 })
 export class ProductCatalog {
-    readonly products: Product[] = [
+    readonly products = signal<Product[]>([
         { id: 1, name: 'Ноутбук', category: 'Электроника', price: 75000 },
         { id: 2, name: 'Мышь', category: 'Аксессуары', price: 2500 },
         { id: 3, name: 'Монитор', category: 'Электроника', price: 23000 },
         { id: 4, name: 'Коврик', category: 'Аксессуары', price: 900 },
         { id: 5, name: 'Клавиатура', category: 'Аксессуары', price: 5800 }
-    ];
+    ]);
 
-    search = '';
-    category = 'Все';
-    sortOrder: SortOrder = 'asc';
-    visibleProducts: Product[] = [];
-    totalPrice = 0;
-    resultCount = 0;
+    readonly search = signal('');
 
-    constructor() {
-        this.refresh();
+    readonly category = signal('Все');
+
+    readonly sortOrder = signal<SortOrder>('asc');
+
+    readonly visibleProducts = computed<Product[]>(() => {
+        const query = this.search().trim().toLowerCase();
+        const selectedCategory = this.category();
+        const order = this.sortOrder();
+
+        return this.products()
+            .filter(product => product.name.toLowerCase().includes(query))
+            .filter(product => selectedCategory === 'Все' || product.category === selectedCategory)
+            .sort((a, b) => (order === 'asc' ? a.price - b.price : b.price - a.price));
+    });
+
+    readonly resultCount = computed(() => this.visibleProducts().length);
+
+    readonly totalPrice = computed(() =>
+        this.visibleProducts().reduce((sum, product) => sum + product.price, 0));
+
+    constructor() {}
+
+    onQueryChange(query: string): void {
+        this.search.set(query);
     }
 
-    refresh(): void {
-        const query = this.search.trim().toLowerCase();
-        this.visibleProducts = this.products
-            .filter((product) => product.name.toLowerCase().includes(query))
-            .filter((product) => this.category === 'Все' || product.category === this.category)
-            .sort((a, b) => this.sortOrder === 'asc' ? a.price - b.price : b.price - a.price);
-        this.resultCount = this.visibleProducts.length;
-        this.totalPrice = this.visibleProducts.reduce((sum, product) => sum + product.price, 0);
+    onCategoryChange(category: string): void {
+        this.category.set(category);
+    }
+
+    onSortingChange(sortOrder: SortOrder): void {
+        this.sortOrder.set(sortOrder);
     }
 }
