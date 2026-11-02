@@ -1,0 +1,20 @@
+<section class="settings">
+    <h2>Настройки пользователя</h2>
+    <div class="settings__group">
+        <h3>Тема интерфейса</h3>
+        <button type="button" [class.active]="theme() === 'light'" (click)="setTheme('light')">Светлая</button>
+        <button type="button" [class.active]="theme() === 'dark'" (click)="setTheme('dark')">Тёмная</button>
+    </div>
+    <div class="settings__group">
+        <h3>Размер шрифта</h3>
+        <button type="button" [class.active]="fontSize() === 'small'" (click)="setFontSize('small')">Маленький</button>
+        <button type="button" [class.active]="fontSize() === 'medium'" (click)="setFontSize('medium')">Средний</button>
+        <button type="button" [class.active]="fontSize() === 'large'" (click)="setFontSize('large')">Большой</button>
+    </div>
+    <div class="settings__preview"
+         [class.settings__preview--dark]="theme() === 'dark'"
+         [class.settings__preview--small]="fontSize() === 'small'"
+         [class.settings__preview--large]="fontSize() === 'large'">
+        Пример текста с выбранными настройками
+    </div>
+</section>

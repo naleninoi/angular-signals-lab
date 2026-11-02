@@ -1,0 +1,21 @@
+<section class="search">
+    <h2>Поиск технологий</h2>
+    <input type="text" placeholder="Введите название"
+           [ngModel]="query" (ngModelChange)="onQueryChange($event)"/>
+    <label>
+        <input type="checkbox" [ngModel]="debugMode"
+               (ngModelChange)="onDebugChange($event)"/>
+        Debug mode
+    </label>
+    @if (loading) {
+        <p>Поиск...</p>
+    } @else {
+        <ul>
+            @for (result of results; track result) {
+                <li>{{ result }}</li>
+            } @empty {
+                <li>Ничего не найдено</li>
+            }
+        </ul>
+    }
+</section>

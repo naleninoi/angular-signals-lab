@@ -1,0 +1,25 @@
+.product-selector {
+    padding: 24px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+
+    &__categories, &__products {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-bottom: 20px;
+    }
+    button {
+        padding: 10px 16px;
+        border: 1px solid #aaa;
+        border-radius: 6px;
+        background: white;
+        cursor: pointer;
+        &:hover { background: #eee; }
+    }
+    &__selected {
+        padding: 16px;
+        background: #f5f5f5;
+        border-radius: 6px;
+    }
+}
