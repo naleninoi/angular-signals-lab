@@ -1,4 +1,4 @@
-import { Component, computed, signal } from '@angular/core';
+import { Component, computed, linkedSignal, signal } from '@angular/core';
 
 interface Product {
     id: number;
@@ -20,27 +20,47 @@ export class ProductSelector {
         { id: 2, name: 'Монитор', category: 'electronics', price: 350 },
         { id: 3, name: 'Клавиатура', category: 'electronics', price: 110 },
         { id: 4, name: 'Стол', category: 'furniture', price: 450 },
-        { id: 5, name: 'Кресло', category: 'furniture', price: 300 }
+        { id: 5, name: 'Кресло', category: 'furniture', price: 300 },
+        { id: 6, name: 'Кресло-массажер', category: 'electronics', price: 1500 },
+        { id: 6, name: 'Кресло-массажер', category: 'furniture', price: 1500 }
     ]);
 
     readonly category = signal<Category>('electronics');
+
     readonly availableProducts = computed(() =>
         this.products().filter(product => product.category === this.category())
     );
 
-    // TODO: Создать selectedProduct через linkedSignal() с source/computation.
     // Если предыдущий выбор доступен, сохранить его. Иначе выбрать первый товар.
     // Учесть отсутствие доступных товаров.
+    readonly selectedProduct = linkedSignal<Product[], Product | null>({
+        source: this.availableProducts,
+        computation: (availableProducts, previous) => {
+            if (!availableProducts.length) {
+                return null;
+            }
+
+            const analogueProduct = availableProducts.find(p => p.id === previous?.value?.id);
+
+            return analogueProduct ?? availableProducts[0];
+        }
+    });
 
     setCategory(category: Category): void {
         this.category.set(category);
     }
 
     selectProduct(product: Product): void {
-        // TODO: Реализовать ручной выбор через selectedProduct.
+        this.selectedProduct.set(product);
     }
 
     removeSelectedProduct(): void {
-        // TODO: Иммутабельно удалить выбранный товар из products.
+        const selectedProduct = this.selectedProduct();
+
+        if (!selectedProduct) {
+            return;
+        }
+
+        this.products.update(products => products.filter(p => p.id !== selectedProduct.id));
     }
 }

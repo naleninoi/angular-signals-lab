@@ -1,12 +1,23 @@
 <section class="product-selector">
     <h2>Выбор товара</h2>
     <div class="product-selector__categories">
-        <button type="button" (click)="setCategory('electronics')">Электроника</button>
-        <button type="button" (click)="setCategory('furniture')">Мебель</button>
+        <button
+            type="button"
+            (click)="setCategory('electronics')">
+            Электроника
+        </button>
+        <button
+            type="button"
+            (click)="setCategory('furniture')">
+            Мебель
+        </button>
     </div>
     <div class="product-selector__products">
         @for (product of availableProducts(); track product.id) {
-            <button type="button" (click)="selectProduct(product)">
+            <button
+                type="button"
+                [class.active]="product.id === selectedProduct()?.id"
+                (click)="selectProduct(product)">
                 {{ product.name }} — {{ product.price }}
             </button>
         } @empty {
@@ -15,7 +26,13 @@
     </div>
     <div class="product-selector__selected">
         <h3>Выбранный товар</h3>
-        <!-- TODO: Вывести selectedProduct и обработать отсутствие выбранного товара. -->
-        <button type="button" (click)="removeSelectedProduct()">Удалить выбранный товар</button>
+        <p>{{ selectedProduct()?.name ?? 'Товар не выбран' }}</p>
+
+        <button
+            type="button"
+            [disabled]="!selectedProduct()"
+            (click)="removeSelectedProduct()">
+            Удалить выбранный товар
+        </button>
     </div>
 </section>

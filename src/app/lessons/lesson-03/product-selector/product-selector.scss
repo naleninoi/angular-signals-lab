@@ -16,6 +16,10 @@
         background: white;
         cursor: pointer;
         &:hover { background: #eee; }
+
+        &.active {
+            background: #9cb0e6;
+        }
     }
     &__selected {
         padding: 16px;
